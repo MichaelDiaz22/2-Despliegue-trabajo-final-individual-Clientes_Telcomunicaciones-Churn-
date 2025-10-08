@@ -2,5 +2,3 @@ scikit-learn
 pandas
 numpy
 joblib
-os
-sys
