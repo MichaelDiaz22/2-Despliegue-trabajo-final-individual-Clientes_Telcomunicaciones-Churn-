@@ -1,63 +1,16 @@
 import streamlit as st
-import joblib
 import pandas as pd
+import joblib
 import numpy as np
-import os
-import sys
 
-# Configuración de la página
-st.set_page_config(page_title="Predicción Churn", layout="wide")
-
-# Título de la aplicación
-st.title("Sistema de Predicción de Churn para Clientes de Telecomunicaciones")
-
-# Función para cargar el modelo con manejo robusto de errores
-@st.cache_resource
-def load_model(model_path):
-    """
-    Carga el modelo con manejo robusto de errores
-    """
-    try:
-        # Verificar si el archivo existe
-        if not os.path.exists(model_path):
-            st.error(f"❌ Archivo de modelo no encontrado: {model_path}")
-            st.info("""
-            **Solución:**
-            1. Asegúrate de que el archivo .joblib esté en el mismo directorio
-            2. Verifica el nombre del archivo
-            3. Si estás en Streamlit Cloud, sube el archivo al repositorio
-            """)
-            return None
-        
-        # Intentar cargar el modelo
-        model = joblib.load(model_path)
-        st.success(f"✅ Modelo cargado exitosamente desde: {model_path}")
-        return model
-        
-    except Exception as e:
-        st.error(f"❌ Error cargando el modelo: {str(e)}")
-        st.info("""
-        **Posibles soluciones:**
-        1. **Reentrenar el modelo** con las mismas versiones de librerías
-        2. **Verificar dependencias** (scikit-learn, pandas, numpy)
-        3. **Usar cloudpickle** en lugar de joblib para serializar
-        """)
-        return None
-
-# Cargar el modelo
-with st.spinner("Cargando modelo de machine learning..."):
-    classical_model_pipeline = load_model('best_classical_model_pipeline.joblib')
-    ensemble_model_pipeline = load_model('best_ensemble_model_pipeline.joblib')
-
-# Si el modelo no se carga, mostrar mensaje y detener la ejecución
-if classical_model_pipeline is None:
+# Load the trained pipelines
+try:
+    classical_model_pipeline = joblib.load('best_classical_model_pipeline.joblib')
+    ensemble_model_pipeline = joblib.load('best_ensemble_model_pipeline.joblib')
+except FileNotFoundError:
+    st.error("Model pipelines not found. Please ensure 'best_classical_model_pipeline.joblib' and 'best_ensemble_model_pipeline.joblib' are in the specified Drive folder.")
     st.stop()
 
-# Resto de tu aplicación...
-st.success("¡Aplicación lista para hacer predicciones!")
-
-# Aquí continúa el resto de tu código para la interfaz de usuario
-# y las predicciones...
 
 # --- Streamlit App Interface ---
 st.title('Customer Churn Prediction')
@@ -220,8 +173,3 @@ if st.button('Predict Churn'):
     except ValueError as e:
         st.error(f"Prediction error: {e}")
         st.warning("There might be a mismatch in the input features expected by the model. Please check the preprocessing steps and ensure the input columns match the training data.")
-
-
-
-
-
