@@ -47,6 +47,7 @@ def load_model(model_path):
 # Cargar el modelo
 with st.spinner("Cargando modelo de machine learning..."):
     classical_model_pipeline = load_model('best_classical_model_pipeline.joblib')
+    ensemble_model_pipeline = load_model('best_ensemble_model_pipeline.joblib')
 
 # Si el modelo no se carga, mostrar mensaje y detener la ejecución
 if classical_model_pipeline is None:
@@ -219,6 +220,7 @@ if st.button('Predict Churn'):
     except ValueError as e:
         st.error(f"Prediction error: {e}")
         st.warning("There might be a mismatch in the input features expected by the model. Please check the preprocessing steps and ensure the input columns match the training data.")
+
 
 
 
