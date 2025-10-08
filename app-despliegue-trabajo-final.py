@@ -1,4 +1,3 @@
-%%writefile app.py
 import streamlit as st
 import pandas as pd
 import joblib
@@ -174,3 +173,4 @@ if st.button('Predict Churn'):
     except ValueError as e:
         st.error(f"Prediction error: {e}")
         st.warning("There might be a mismatch in the input features expected by the model. Please check the preprocessing steps and ensure the input columns match the training data.")
+
