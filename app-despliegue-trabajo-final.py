@@ -1,25 +1,17 @@
+import os
 import streamlit as st
-import pandas as pd
-import joblib
-import numpy as np
-from sklearn.base import BaseEstimator, TransformerMixin
 
-class CustomTransformer(BaseEstimator, TransformerMixin):
-    def __init__(self, param=1):
-        self.param = param
-    
-    def fit(self, X, y=None):
-        return self
-    
-    def transform(self, X):
-        # Tu lógica de transformación
-        return X
-# Intentar cargar con manejo de errores
+# Verificar que el archivo existe
+if not os.path.exists('best_classical_model_pipeline.joblib'):
+    st.error("Archivo del modelo no encontrado")
+    st.stop()
+
+# Cargar con manejo de errores
 try:
     classical_model_pipeline = joblib.load('best_classical_model_pipeline.joblib')
-    ensemble_model_pipeline = joblib.load('best_ensemble_model_pipeline.joblib')
+    st.success("Modelo cargado exitosamente")
 except Exception as e:
-    st.error(f"Error cargando el modelo: {e}")
+    st.error(f"Error cargando modelo: {str(e)}")
     st.stop()
 
 
@@ -184,5 +176,6 @@ if st.button('Predict Churn'):
     except ValueError as e:
         st.error(f"Prediction error: {e}")
         st.warning("There might be a mismatch in the input features expected by the model. Please check the preprocessing steps and ensure the input columns match the training data.")
+
 
 
